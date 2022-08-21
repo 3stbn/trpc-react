@@ -3,14 +3,29 @@ import * as trpc from "@trpc/server";
 import cors from "cors";
 import express from "express";
 import { z } from "zod";
-const appRouter = trpc.router().query("helloWorld", {
-  input: z.object({
-    name: z.string(),
-  }),
-  async resolve(req) {
-    return { message: `Hello ${req.input.name}` };
-  },
-});
+import "reflect-metadata";
+import { AppDataSource } from "./source/data-source";
+import { createRouter } from "./source/utils";
+import { tutorials } from "./source/routes/tutorial";
+const PORT = 4000;
+
+async function connectDb() {
+  try {
+    await AppDataSource.initialize();
+    console.log("Connected to database");
+  } catch (error) {
+    console.log("Error connecting to database", error);
+  }
+}
+
+const appRouter = createRouter().merge("tutorial.", tutorials);
+
+const createContext = ({
+  req,
+  res,
+}: trpcExpress.CreateExpressContextOptions) => ({}); // no context
+
+export type Context = trpc.inferAsyncReturnType<typeof createContext>;
 
 export type AppRouter = typeof appRouter;
 
@@ -21,7 +36,15 @@ app.use(
   "/trpc",
   trpcExpress.createExpressMiddleware({
     router: appRouter,
+    createContext,
   })
 );
 
-app.listen(4000);
+async function main() {
+  await connectDb();
+  app.listen(PORT, () => {
+    console.log(`Server running on ${PORT}`);
+  });
+}
+
+main();
