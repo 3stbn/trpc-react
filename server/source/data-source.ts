@@ -1,11 +1,11 @@
 import { DataSource } from "typeorm";
-import { Tutorial } from "./entity/Tutorial";
+import { tutorialEntity } from "./entity/tutorials";
 
 export const AppDataSource = new DataSource({
   type: "sqlite",
   database: ":memory:",
 
-  entities: [Tutorial],
+  entities: [tutorialEntity],
   //only used for development
   synchronize: true,
   dropSchema: true,
