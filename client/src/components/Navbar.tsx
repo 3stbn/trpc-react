@@ -1,7 +1,5 @@
-import React, { useState } from "react";
-
+import { useState } from "react";
 import { Logo } from "../components/Logo";
-import { Link } from "wouter";
 import { useAppContext } from "../context/AppContext";
 
 export function Navbar() {
@@ -32,12 +30,9 @@ export function Navbar() {
       </div>
       <div className={`navbar-menu ${isActive && "is-active"}`}>
         <div className="navbar-start">
-          <Link href="/dashboard" className="navbar-item">
+          <a href="/" className="navbar-item">
             Home
-          </Link>
-          <Link href="/account" className="navbar-item">
-            Account
-          </Link>
+          </a>
         </div>
         <div className="navbar-end">
           <div className="navbar-item">
@@ -50,12 +45,6 @@ export function Navbar() {
                   <i className="fas fa-plus" />
                 </span>
               </button>
-              {/* <button className="button is-link" onClick={auth.logout}>
-                <span className="icon is-small">
-                  <i className="fas fa-sign-out-alt" />
-                </span>
-                <span>Log Out</span>
-              </button> */}
             </div>
           </div>
         </div>

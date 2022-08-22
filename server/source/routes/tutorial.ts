@@ -7,20 +7,21 @@ import { tutorialStatusEnum, Tutorial } from "local-shared";
 const tutorialRepository = AppDataSource.getRepository(tutorialEntity);
 
 type CreateInput = Omit<Tutorial, "id">;
-type PatchInput = Partial<CreateInput> & Pick<Tutorial, "id">;
+type OptionalCreateInput = Partial<CreateInput>;
+type PatchInput = Pick<OptionalCreateInput, "progress" | "status"> &
+  Pick<Tutorial, "id">;
 
 const createSchema: z.ZodType<CreateInput> = z.object({
   youtubeUrl: z.string(),
   title: z.string(),
   progress: z.number(),
-  userId: z.number(),
   status: z.enum(tutorialStatusEnum),
 });
 
 const patchSchema: z.ZodType<PatchInput> = z.object({
   id: z.number(),
-  progress: z.number(),
-  status: z.enum(tutorialStatusEnum),
+  progress: z.number().optional(),
+  status: z.enum(tutorialStatusEnum).optional(),
 });
 
 export const tutorials = createRouter()

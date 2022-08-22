@@ -11,6 +11,5 @@ export interface Tutorial {
   youtubeUrl: string;
   title: string;
   progress: number;
-  userId: number;
   status: tutorialStatus;
 }

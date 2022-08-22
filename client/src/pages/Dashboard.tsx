@@ -2,7 +2,7 @@ import { Page } from "../components/Page";
 import { Navbar } from "../components/Navbar";
 
 import { tutorialStatusEnum, tutorialStatus } from "local-shared";
-import { pascalCaseToSentence } from "../utils/formating";
+import { pascalCaseToSentence } from "../utils/formatting";
 import { useAppContext } from "../context/AppContext";
 import { VideoModal } from "../components/VideoModal";
 import { TutorialTab } from "../components/TutorialTab";
@@ -34,10 +34,7 @@ export function Dashboard() {
                 key={tab.value}
                 className={`tab ${activeTabClass(tab.value)}`}
               >
-                <a
-                  href={`#/?tab=${tab.value}`}
-                  onClick={() => setSelectedTab(tab.value)}
-                >
+                <a href={`#/`} onClick={() => setSelectedTab(tab.value)}>
                   {tab.label}
                 </a>
               </li>

@@ -29,6 +29,9 @@ export function VideoModal() {
   function closeModal() {
     setShowModal(false);
   }
+  function canSubmit() {
+    return tutorial.title.length > 0 && tutorial.youtubeUrl.length > 0;
+  }
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -37,7 +40,6 @@ export function VideoModal() {
       youtubeUrl: tutorial.youtubeUrl,
       status: tutorial.status,
       progress: videoProgress,
-      userId: 1,
     });
   }
 
@@ -103,7 +105,11 @@ export function VideoModal() {
           ) : null}
         </section>
         <footer className="modal-card-foot">
-          <button className="button is-primary" type="submit">
+          <button
+            className="button is-primary"
+            type="submit"
+            disabled={!canSubmit()}
+          >
             Save changes
           </button>
           <button className="button" onClick={closeModal}>

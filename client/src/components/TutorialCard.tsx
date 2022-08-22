@@ -12,16 +12,17 @@ interface TutorialCardProps {
 }
 interface TutorialPatchPayload {
   id: number;
-  status: tutorialStatus;
-  progress: number;
+  status?: tutorialStatus;
+  progress?: number;
 }
+
 export function TutorialCard({ tutorial }: TutorialCardProps) {
   const { setSelectedTab } = useAppContext();
   const { invalidateQueries } = trpc.useContext();
   const patchMutation = trpc.useMutation("tutorial.patch", {
     onSuccess: () => {
       invalidateQueries(["tutorial.getByStatus"]);
-      setSelectedTab(patchTutorial.status);
+      setSelectedTab(updatedStatus);
     },
   });
   const deleteMutation = trpc.useMutation("tutorial.delete", {
@@ -30,38 +31,31 @@ export function TutorialCard({ tutorial }: TutorialCardProps) {
     },
   });
   const debouncedMutation = useDebouncedCallback(
-    (payload: TutorialPatchPayload) => {
-      console.log("mutating");
-      patchMutation.mutate(payload);
-    },
-    1000
+    (payload: TutorialPatchPayload) => patchMutation.mutate(payload),
+    300
   );
-  const [patchTutorial, setPatchTutorial] = useState({
-    status: tutorial.status,
-    progress: tutorial.progress,
-  });
+  const [updatedStatus, setUpdatedStatus] = useState(tutorial.status);
+  const [updatedProgress, setUpdatedProgress] = useState(tutorial.progress);
+
   const [videoDuration, setVideoDuration] = useState(0);
 
-  //   useEffect(() => {
-  //     const { status, progress } = tutorial;
-  //     if (
-  //       JSON.stringify(patchTutorial) !== JSON.stringify({ status, progress })
-  //     ) {
-  //       patchMutation.mutate({
-  //         id: tutorial.id,
-  //         status: patchTutorial.status,
-  //         progress: patchTutorial.progress,
-  //       });
-  //     }
-  //   }, [patchTutorial, tutorial, patchMutation]);
-  // when patchTutorial changes, debounce the mutation
   useEffect(() => {
-    debouncedMutation({
-      id: tutorial.id,
-      status: patchTutorial.status,
-      progress: patchTutorial.progress,
-    });
-  }, [patchTutorial, debouncedMutation, tutorial.id]);
+    if (updatedProgress !== tutorial.progress) {
+      debouncedMutation({
+        id: tutorial.id,
+        progress: updatedProgress,
+      });
+    }
+  }, [updatedProgress, tutorial, debouncedMutation]);
+
+  useEffect(() => {
+    if (updatedStatus) {
+      debouncedMutation({
+        id: tutorial.id,
+        status: updatedStatus,
+      });
+    }
+  }, [updatedStatus, tutorial, debouncedMutation]);
 
   return (
     <div className="card">
@@ -79,18 +73,16 @@ export function TutorialCard({ tutorial }: TutorialCardProps) {
         </div>
         <div className="content">
           <VideoStatusSelector
-            status={patchTutorial.status}
-            onChange={(status) =>
-              setPatchTutorial({ ...patchTutorial, status })
-            }
+            status={updatedStatus}
+            onChange={(status) => {
+              setUpdatedStatus(status);
+            }}
           />
           {tutorial.status === "inProgress" && videoDuration && (
             <VideoProgressSlider
               videoDuration={videoDuration}
-              value={tutorial.progress}
-              onChange={(v) =>
-                setPatchTutorial({ ...patchTutorial, progress: v })
-              }
+              value={updatedProgress}
+              onChange={(v) => setUpdatedProgress(v)}
             />
           )}
           <button

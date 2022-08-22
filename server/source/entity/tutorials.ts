@@ -18,9 +18,6 @@ export const tutorialEntity = new EntitySchema<Tutorial>({
     progress: {
       type: Number,
     },
-    userId: {
-      type: Number,
-    },
     status: {
       type: "simple-enum",
       enum: tutorialStatusEnum,
