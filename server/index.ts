@@ -2,7 +2,6 @@ import * as trpcExpress from "@trpc/server/adapters/express";
 import * as trpc from "@trpc/server";
 import cors from "cors";
 import express from "express";
-import { z } from "zod";
 import "reflect-metadata";
 import { AppDataSource } from "./source/data-source";
 import { createRouter } from "./source/utils";
@@ -20,10 +19,7 @@ async function connectDb() {
 
 const appRouter = createRouter().merge("tutorial.", tutorials);
 
-const createContext = ({
-  req,
-  res,
-}: trpcExpress.CreateExpressContextOptions) => ({}); // no context
+const createContext = () => ({});
 
 export type Context = trpc.inferAsyncReturnType<typeof createContext>;
 
@@ -39,6 +35,13 @@ app.use(
     createContext,
   })
 );
+
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static("../client/build"));
+  app.get("*", (req, res) => {
+    res.sendFile("../client/build/index.html");
+  });
+}
 
 async function main() {
   await connectDb();

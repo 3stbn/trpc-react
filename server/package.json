@@ -2,11 +2,14 @@
   "name": "server",
   "version": "1.0.0",
   "description": "",
-  "main": "index.ts",
+  "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "link:shared": "symlink-dir ../shared node_modules/local-shared",
     "start": "ts-node-dev index.ts",
+    "build": "tsc",
+    "prestart": "npm run build",
+    "start:prod": "NODE_ENV=production node dist/index.js",
     "postinstall": "npm run link:shared"
   },
   "keywords": [],
