@@ -1,6 +1,6 @@
 import { AppDataSource } from "../data-source";
 import { tutorialEntity } from "../entity/tutorials";
-import { createRouter } from "../utils";
+import { t } from "../trpc";
 import { z } from "zod";
 import { tutorialStatusEnum, Tutorial } from "local-shared";
 
@@ -11,54 +11,45 @@ type OptionalCreateInput = Partial<CreateInput>;
 type PatchInput = Pick<OptionalCreateInput, "progress" | "status"> &
   Pick<Tutorial, "id">;
 
-const createSchema: z.ZodType<CreateInput> = z.object({
+const createSchema = z.object({
   youtubeUrl: z.string(),
   title: z.string(),
   progress: z.number(),
   status: z.enum(tutorialStatusEnum),
 });
 
-const patchSchema: z.ZodType<PatchInput> = z.object({
+const patchSchema = z.object({
   id: z.number(),
   progress: z.number().optional(),
   status: z.enum(tutorialStatusEnum).optional(),
 });
 
-export const tutorials = createRouter()
-  .query("list", {
-    resolve: async () => {
-      return await tutorialRepository.find();
-    },
-  })
-  .query("getByStatus", {
-    input: z.object({
-      status: z.enum(tutorialStatusEnum),
-    }),
-    resolve: async ({ input }) => {
-      return await tutorialRepository.find({
+export const tutorialRouter = t.router({
+  list: t.procedure.query(() => {
+    return tutorialRepository.find();
+  }),
+  getByStatus: t.procedure
+    .input(
+      z.object({
+        status: z.enum(tutorialStatusEnum),
+      })
+    )
+    .query((req) => {
+      return tutorialRepository.find({
         where: {
-          status: input.status,
+          status: req.input.status,
         },
       });
-    },
-  })
-  .mutation("create", {
-    input: createSchema,
-    resolve: async ({ input }) => {
-      return await tutorialRepository.save(input);
-    },
-  })
-  .mutation("patch", {
-    input: patchSchema,
-    resolve: async ({ input }) => {
-      return await tutorialRepository.update(input.id, input);
-    },
-  })
-  .mutation("delete", {
-    input: z.object({
-      id: z.number(),
     }),
-    resolve: async ({ input }) => {
-      return await tutorialRepository.delete(input.id);
-    },
-  });
+  create: t.procedure.input(createSchema).mutation((req) => {
+    req.input;
+    return tutorialRepository.save(req.input);
+  }),
+  patch: t.procedure.input(patchSchema).mutation((req) => {
+    const { id, ...rest } = req.input;
+    return tutorialRepository.update(id, rest);
+  }),
+  delete: t.procedure.input(z.object({ id: z.number() })).mutation((req) => {
+    return tutorialRepository.delete(req.input.id);
+  }),
+});

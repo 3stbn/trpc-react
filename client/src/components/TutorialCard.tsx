@@ -18,16 +18,16 @@ interface TutorialPatchPayload {
 
 export function TutorialCard({ tutorial }: TutorialCardProps) {
   const { setSelectedTab } = useAppContext();
-  const { invalidateQueries } = trpc.useContext();
-  const patchMutation = trpc.useMutation("tutorial.patch", {
+  const trpcContext = trpc.useContext();
+  const patchMutation = trpc.tutorial.patch.useMutation({
     onSuccess: () => {
-      invalidateQueries(["tutorial.getByStatus"]);
+      trpcContext.tutorial.getByStatus.invalidate();
       setSelectedTab(updatedStatus);
     },
   });
-  const deleteMutation = trpc.useMutation("tutorial.delete", {
+  const deleteMutation = trpc.tutorial.delete.useMutation({
     onSuccess: () => {
-      invalidateQueries(["tutorial.getByStatus"]);
+      trpcContext.tutorial.getByStatus.invalidate();
     },
   });
   const debouncedMutation = useDebouncedCallback(

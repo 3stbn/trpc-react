@@ -1,11 +1,11 @@
 import * as trpcExpress from "@trpc/server/adapters/express";
-import * as trpc from "@trpc/server";
+
 import cors from "cors";
 import express from "express";
 import "reflect-metadata";
 import { AppDataSource } from "./source/data-source";
-import { createRouter } from "./source/utils";
-import { tutorials } from "./source/routes/tutorial";
+import { createContext, t } from "./source/trpc";
+import { tutorialRouter } from "./source/routes/tutorial";
 const PORT = 4000;
 
 async function connectDb() {
@@ -17,11 +17,9 @@ async function connectDb() {
   }
 }
 
-const appRouter = createRouter().merge("tutorial.", tutorials);
-
-const createContext = () => ({});
-
-export type Context = trpc.inferAsyncReturnType<typeof createContext>;
+const appRouter = t.router({
+  tutorial: tutorialRouter,
+});
 
 export type AppRouter = typeof appRouter;
 

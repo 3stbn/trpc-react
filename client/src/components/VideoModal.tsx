@@ -8,11 +8,11 @@ import { VideoProgressSlider } from "./VideoProgressSlider";
 
 export function VideoModal() {
   const { setShowModal, setSelectedTab } = useAppContext();
-  const { invalidateQueries } = trpc.useContext();
-  const videoMutation = trpc.useMutation("tutorial.create", {
+  const trpcContext = trpc.useContext();
+  const videoMutation = trpc.tutorial.create.useMutation({
     onSuccess: () => {
       setShowModal(false);
-      invalidateQueries("tutorial.getByStatus");
+      trpcContext.tutorial.getByStatus.invalidate();
       setSelectedTab(tutorial.status);
     },
   });
