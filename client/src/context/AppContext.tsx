@@ -1,4 +1,4 @@
-import { tutorialStatus, tutorialStatusEnum } from "local-shared";
+import { tutorialStatus, tutorialStatusEnum } from "../../../lib";
 import React, {
   createContext,
   SetStateAction,

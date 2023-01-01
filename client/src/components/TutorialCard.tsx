@@ -1,11 +1,11 @@
-import { Tutorial } from "local-shared";
+import { Tutorial, tutorialStatus } from "../../../lib/";
 import { useEffect, useState } from "react";
 import { trpc } from "../utils/trpc";
 import { VideoProgressSlider } from "./VideoProgressSlider";
 import { VideoStatusSelector } from "./VideoStatusSelector";
 import { useDebouncedCallback } from "use-debounce";
 import { YoutubePreview } from "./YoutubePreview";
-import { tutorialStatus } from "local-shared";
+
 import { useAppContext } from "../context/AppContext";
 interface TutorialCardProps {
   tutorial: Tutorial;

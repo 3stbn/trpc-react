@@ -1,4 +1,4 @@
-import { Tutorial, tutorialStatus } from "local-shared";
+import { Tutorial, tutorialStatus } from "../../../lib";
 import { trpc } from "../utils/trpc";
 import { TutorialCard } from "./TutorialCard";
 

@@ -1,7 +1,7 @@
 import { Page } from "../components/Page";
 import { Navbar } from "../components/Navbar";
 
-import { tutorialStatusEnum, tutorialStatus } from "local-shared";
+import { tutorialStatusEnum, tutorialStatus } from "../../../lib";
 import { pascalCaseToSentence } from "../utils/formatting";
 import { useAppContext } from "../context/AppContext";
 import { VideoModal } from "../components/VideoModal";

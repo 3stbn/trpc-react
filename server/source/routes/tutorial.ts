@@ -2,7 +2,7 @@ import { AppDataSource } from "../data-source";
 import { tutorialEntity } from "../entity/tutorials";
 import { t } from "../trpc";
 import { z } from "zod";
-import { tutorialStatusEnum, Tutorial } from "local-shared";
+import { tutorialStatusEnum, Tutorial } from "../../../lib";
 
 const tutorialRepository = AppDataSource.getRepository(tutorialEntity);
 

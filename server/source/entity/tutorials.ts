@@ -1,5 +1,5 @@
 import { EntitySchema } from "typeorm";
-import { Tutorial, tutorialStatusEnum } from "local-shared";
+import { Tutorial, tutorialStatusEnum } from "../../../lib";
 
 export const tutorialEntity = new EntitySchema<Tutorial>({
   name: "Tutorial",

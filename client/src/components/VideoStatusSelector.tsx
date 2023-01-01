@@ -1,5 +1,5 @@
 import { videoStatusOptions } from "../pages/Dashboard";
-import { tutorialStatus } from "local-shared";
+import { tutorialStatus } from "../../../lib";
 interface VideoStatusSelectorProps {
   status: tutorialStatus;
   onChange: (status: tutorialStatus) => void;
