@@ -6,11 +6,6 @@ import { tutorialStatusEnum, Tutorial } from "../../../lib";
 
 const tutorialRepository = AppDataSource.getRepository(tutorialEntity);
 
-type CreateInput = Omit<Tutorial, "id">;
-type OptionalCreateInput = Partial<CreateInput>;
-type PatchInput = Pick<OptionalCreateInput, "progress" | "status"> &
-  Pick<Tutorial, "id">;
-
 const createSchema = z.object({
   youtubeUrl: z.string(),
   title: z.string(),
