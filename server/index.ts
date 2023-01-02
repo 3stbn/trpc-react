@@ -8,6 +8,9 @@ import { createContext, t } from "./source/trpc";
 import { tutorialRouter } from "./source/routes/tutorial";
 const PORT = 4000;
 
+const app = express();
+app.use(cors());
+
 async function connectDb() {
   try {
     await AppDataSource.initialize();
@@ -23,9 +26,6 @@ const appRouter = t.router({
 
 export type AppRouter = typeof appRouter;
 
-const app = express();
-
-app.use(cors());
 app.use(
   "/trpc",
   trpcExpress.createExpressMiddleware({
